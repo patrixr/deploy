@@ -1,0 +1,48 @@
+---
+- name: Lookup Node.js path
+  command: which node
+  register: NODE_PATH
+
+- name: Create app folder 
+  become: true
+  become_user: dev
+  file: 
+    path: "{{ APP_FOLDER }}"
+    state: directory     
+    owner: dev
+    group: dev
+    mode: u=rwx,g=rx,o=rx
+
+- name: Checkout Repo
+  become: true
+  become_user: dev
+  git: repo={{ REPO_URL }}
+       dest={{ APP_FOLDER }}/{{ REPO_NAME }}
+       accept_hostkey=true
+  register: gitresults
+
+- name: NPM Install
+  become: true
+  become_user: dev
+  npm: path={{ APP_FOLDER }}/{{ REPO_NAME }} state=latest
+
+- name: Create systemd service
+  become: true
+  template:
+    src: "sample.service.j2"
+    dest: "/etc/systemd/system/{{ REPO_NAME }}.service"
+    mode: 0640
+    owner: dev
+    group: dev
+  when: gitresults.changed or FORCE
+
+- name: Enable Service
+  become: true
+  shell: systemctl enable {{ REPO_NAME }}.service
+  when: gitresults.changed or FORCE
+
+- name: Restart Service
+  become: true
+  service: name={{ REPO_NAME }} state=restarted enabled=yes
+  when: gitresults.changed or FORCE
+  

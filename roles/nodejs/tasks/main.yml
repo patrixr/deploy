@@ -1,0 +1,12 @@
+---
+- name: Dependencies
+  apt: update_cache=yes pkg=python-software-properties state=installed 
+  become: true # sudo
+
+- name: Add node.js sources
+  raw: curl -sL https://deb.nodesource.com/setup_{{ NODE_VERSION }}.x | sudo bash -
+  become: true
+
+- name: Install Node.js
+  apt: update_cache=yes pkg=nodejs state=installed
+  become: true

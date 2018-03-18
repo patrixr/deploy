@@ -1,0 +1,28 @@
+- name: Add openjdk repo
+  apt_repository:
+    repo: "ppa:openjdk-r/ppa"
+    state: present
+    update_cache: yes
+
+- name: Install dependencies
+  apt: update_cache=yes pkg={{ item }} state=present
+    with_items:
+      - openjdk-7-jdk
+      - git
+      
+- name: Add Jenkins repository key
+  apt_key:
+    url: "{{ JENKINS_REPO_KEY }}"
+    state: present
+      
+- name: Add Jenkins apt repository
+  apt_repository:
+    repo: "{{ JENKINS_REPO_URL }}"
+    state: present
+    update_cache: yes
+    
+- name: Install Jenkins
+  apt: pkg=jenkins state=present
+      
+- name: (Re)start Jenkins service
+  service: name=jenkins state=restarted

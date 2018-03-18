@@ -1,0 +1,31 @@
+---
+- name: Install ufw
+  become: true
+  apt: update_cache=true pkg=ufw state=installed
+
+- name: Disable ufw
+  become: true
+  ufw: state=disabled
+
+- name: Deny everything as base policy
+  become: true
+  ufw: policy=deny
+
+- become: true
+  ufw: logging=on
+
+- name: Allow ports
+  become: true
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items: "{{ OPEN_PORTS }}"
+
+- ufw: rule=allow src={{ item }}
+  become: true
+  with_items:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+
+- name: Start
+  become: true
+  ufw: state=enabled

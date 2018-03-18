@@ -1,0 +1,18 @@
+- name: Install python 2 ( for 16.04 only )
+  become: true
+  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+- name: Install Base Environment
+  become: true
+  apt: update_cache=yes pkg={{ item }} state=present
+  with_items:
+    - build-essential
+    - emacs24-nox
+
+- name: Create user
+  become: true
+  user:
+    shell: /bin/bash
+    groups: sudo
+    name: "{{ USER }}"
+    system: yes

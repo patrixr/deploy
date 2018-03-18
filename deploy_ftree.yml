@@ -1,0 +1,22 @@
+---
+- hosts: all
+  remote_user: patrick
+  become: true
+  gather_facts: False
+  
+  tasks:
+  - name: install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+
+- hosts: ftree
+  remote_user: patrick
+  roles:
+     -  role: system-setup
+
+     -  role: node-service
+        REPO_URL: https://github.com/patrixr/food-tree.git
+        REPO_NAME: food-tree
+
+     - { role: firewall, OPEN_PORTS: [ "80", "8000", "22", "443" ] }
+

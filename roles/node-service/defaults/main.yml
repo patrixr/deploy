@@ -1,0 +1,8 @@
+---
+APP_FOLDER: /apps
+ARGS: ""
+REPO_NAME: ""
+REPO_URL: ""
+STARTUP_SCRIPT: bin/serve.js
+USER: dev
+FORCE: false

@@ -1,0 +1,16 @@
+[Unit]
+Description={{ REPO_NAME }} Node Service
+Wants=network.target
+
+[Service]
+ExecStart={{ NODE_PATH.stdout }} {{ APP_FOLDER }}/{{ REPO_NAME }}/{{ STARTUP_SCRIPT }} {{ ARGS }}
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier={{ REPO_NAME }}
+User={{ USER }}
+Group={{ USER }}
+WorkingDirectory={{ APP_FOLDER }}/{{ REPO_NAME }}
+
+[Install]
+WantedBy=multi-user.target
