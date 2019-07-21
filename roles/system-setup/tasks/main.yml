@@ -33,3 +33,9 @@
     user: "{{ USER_NAME }}"
     state: present
   with_file: "{{ PUBLIC_KEYS }}"
+
+- name: Configure SSHD
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^#MaxSessions(.*)$'
+    line: 'MaxSessions 30'
