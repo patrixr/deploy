@@ -4,15 +4,32 @@
 
 - name: Install Base Environment
   become: true
-  apt: update_cache=yes pkg={{ item }} state=present
+  package:
+    name: "{{ item }}"
+    state: present
   with_items:
     - build-essential
-    - emacs24-nox
+    - emacs-nox
 
-- name: Create user
-  become: true
+- name: Create deploy user group(s)
+  group:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ USER_GROUPS }}"
+
+- name: Create deploy user
   user:
-    shell: /bin/bash
-    groups: sudo
-    name: "{{ USER }}"
-    system: yes
+    append: yes
+    groups: "sudo,{{ (USER_GROUPS | join(',')) }}"
+    name: "{{ USER_NAME }}"
+    password: "{{ lookup('password', 'credentials/deployer_passwd length=18') | password_hash('sha512') }}"
+    shell: "{{ USER_SHELL }}"
+    state: present
+    update_password: on_create
+
+- name: Setup authorized_keys
+  authorized_key:
+    key: "{{ item }}"
+    user: "{{ USER_NAME }}"
+    state: present
+  with_file: "{{ PUBLIC_KEYS }}"

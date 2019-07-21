@@ -1,0 +1,22 @@
+---
+- hosts: all
+  remote_user: root
+  roles:
+    - role: system-setup
+
+    - { role: firewall, OPEN_PORTS: [ "80", "8000", "22", "443" ] }
+
+# -  hosts: all
+#    remote_user: deployer
+#    become: true
+#    tasks:
+#       - name: Install Docker
+#         package:
+#           name: docker
+#           state: present
+
+#       - name: Ensure Docker is running
+#         service:
+#           name: docker
+#           state: started
+

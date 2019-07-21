@@ -1,0 +1,23 @@
+staging:
+  hosts:
+    staging1.app.com:
+    staging2.app.com:
+    staging3.app.com:
+  vars:
+    # SSH User
+    ansible_user: systemuser
+    # SSH Port
+    ansible_port: 22
+    # Domain for nginx reverse proxy
+    SERVICE_URL: gql.staging.app.com
+
+prod:
+  hosts:
+    app.com:
+  vars:
+    # SSH User
+    ansible_user: systemuser
+    # SSH Port
+    ansible_port: 22
+    # Domain for nginx reverse proxy
+    SERVICE_URL: gql.app.com

@@ -1,2 +1,6 @@
 ---
-USER: dev
+USER_NAME: deployer
+USER_GROUPS: [deployer,developer,docker]
+USER_SHELL: /bin/bash
+PUBLIC_KEYS:
+  - ~/.ssh/id_rsa.pub
