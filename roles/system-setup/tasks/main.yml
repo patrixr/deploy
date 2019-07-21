@@ -39,3 +39,5 @@
     dest: /etc/ssh/sshd_config
     regexp: '^#MaxSessions(.*)$'
     line: 'MaxSessions 30'
+  notify: Restart SSHD
+
